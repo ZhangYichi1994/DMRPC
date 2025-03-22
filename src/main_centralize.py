@@ -69,7 +69,7 @@ c = controlMethodApproximateGrade()
 # c.choice = 'FirstPrinciple'
 c.choice = 'NN'
 selfIterationFlag = False        # 是否使用自迭代选项：True 使用；  False 不使用
-attackType = 'Geo'              # 'MinMax', 'Surge' , 'Geo', 
+attackType = 'MinMax'              # 'MinMax', 'Surge' , 'Geo', 
 detectionFlag = True
 rollBackWinSize = 3
 
@@ -225,36 +225,36 @@ for loopTime in range(0,stepNum):
     # 攻击检测
     diffBetLSTM_and_FP = np.linalg.norm(initialConditionsForControl - selfIteration, 2)
     print("The difference between normal is: ", diffBetLSTM_and_FP)
-    if (diffBetLSTM_and_FP >= 1) and (detectionFlag):      # 大于阈值，使用数字孪生体的值进行替换，并确定是否回滚数值
-        print("Attack detected! Using digital twins to alternate")
-        initialConditionsForControl = np.array(selfIteration)
-        # 需要回滚LSTM的历史记录
-        if rollBackFlagAlready == True:    # 检测数据是否已经回滚，已经回滚之后不需要继续回滚
-            rollBackFlag = True
-            rollBackFlagAlready =  False
-    else:
-        rollBackFlag = False    # 未检测到攻击，重制标识位
-        rollBackFlagAlready = True
+    # if (diffBetLSTM_and_FP >= 1) and (detectionFlag):      # 大于阈值，使用数字孪生体的值进行替换，并确定是否回滚数值
+    #     print("Attack detected! Using digital twins to alternate")
+    #     initialConditionsForControl = np.array(selfIteration)
+    #     # 需要回滚LSTM的历史记录
+    #     if rollBackFlagAlready == True:    # 检测数据是否已经回滚，已经回滚之后不需要继续回滚
+    #         rollBackFlag = True
+    #         rollBackFlagAlready =  False
+    # else:
+    #     rollBackFlag = False    # 未检测到攻击，重制标识位
+    #     rollBackFlagAlready = True
         
-    if (diffBetLSTM_and_FP <= 0.3) and \
-        (rollBackFlag == False) and \
-         (rollBackFlagAlready == True):      # 重新小于阈值，使用数字孪生体的值进行替换，并确定是否回滚数值
-        print("Go back to use real physical sensor value!!!!!!!!!!!!!!!!!!!!!!!!\n \
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        selfIterationFlag = False
+    # if (diffBetLSTM_and_FP <= 0.3) and \
+    #     (rollBackFlag == False) and \
+    #      (rollBackFlagAlready == True):      # 重新小于阈值，使用数字孪生体的值进行替换，并确定是否回滚数值
+    #     print("Go back to use real physical sensor value!!!!!!!!!!!!!!!!!!!!!!!!\n \
+    #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    #     selfIterationFlag = False
 
-    # 数据回滚操作
-    if (rollBackFlag == True) and (selfIterationFlag == False) :
-        print("Attack detected! Roll back system state!")
-        lstmStateSeq_backup, lstmStateSeq, initialConditionsForControl = c.rollBack(lstmStateSeq_backup, rollBackWinSize)
-        print("initialConditions is:",initialConditions)
-        print("initialConditionsForControl is:", initialConditionsForControl)
-        rollBackFlag = False
-        selfIterationFlag =True
+    # # 数据回滚操作
+    # if (rollBackFlag == True) and (selfIterationFlag == False) :
+    #     print("Attack detected! Roll back system state!")
+    #     lstmStateSeq_backup, lstmStateSeq, initialConditionsForControl = c.rollBack(lstmStateSeq_backup, rollBackWinSize)
+    #     print("initialConditions is:",initialConditions)
+    #     print("initialConditionsForControl is:", initialConditionsForControl)
+    #     rollBackFlag = False
+    #     selfIterationFlag =True
 
-    diffRecord[loopTime + 1, :] = diffBetLSTM_and_FP
+    # diffRecord[loopTime + 1, :] = diffBetLSTM_and_FP
 
-    print("The {} step control is: {}, \n the state is: {}".format(loopTime, controlSeq[0:4], record))
+    # print("The {} step control is: {}, \n the state is: {}".format(loopTime, controlSeq[0:4], record))
 ################################################################################################################
 
 

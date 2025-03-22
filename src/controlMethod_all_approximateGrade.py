@@ -79,7 +79,7 @@ class controlMethodApproximateGrade():      # 求解桑塔格控制率的时候�
         # self.model = ANN(10,64,32,6).to(device)
         self.PATH = "netModel/LSTM_simple_outRe_state_1800epoch.pth"
         self.model = LSTM(10, 64, 6, 1, 256).to(device)
-        self.model.load_state_dict(torch.load(self.PATH)['model'])
+        self.model.load_state_dict(torch.load(self.PATH, map_location=torch.device(device))['model'])
 
         # self.choice = 'FirstPrinciple'    # or  'NN'   'FirstPrinciple'
         self.choice = 'NN'

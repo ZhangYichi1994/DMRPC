@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import scipy.sparse as sp
-device = torch.device("cuda:3" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 torch.set_default_tensor_type(torch.DoubleTensor)
 
 class LSTM(nn.Module):
